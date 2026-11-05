@@ -1,5 +1,6 @@
 package com.gmp.defect_system.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,7 +11,9 @@ import java.util.Map;
 @Service
 public class AiPredictionService {
 
-    private final String AI_SERVER_URL = "https://qc-ai-service.onrender.com/predict-action";
+    @Value("${ai.server.url:https://qc-ai-service-production.up.railway.app/predict-action}")
+    private String aiServerUrl;
+
     private final RestTemplate restTemplate;
 
     public AiPredictionService() {
@@ -23,7 +26,7 @@ public class AiPredictionService {
             request.put("proses", proses);
             request.put("jenis_defect", defect);
             ResponseEntity<Map> response = restTemplate.postForEntity(
-                    AI_SERVER_URL, request, Map.class
+                    aiServerUrl, request, Map.class
             );
             if (response.getBody() != null && "success".equals(response.getBody().get("status"))) {
                 return (String) response.getBody().get("rekomendasi");
