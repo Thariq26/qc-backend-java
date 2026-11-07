@@ -33,7 +33,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**", "/error", "/api/users/operators").permitAll()
+                        .requestMatchers("/api/auth/**", "/error", "/api/users/operators", "/api/upload/**", "/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
