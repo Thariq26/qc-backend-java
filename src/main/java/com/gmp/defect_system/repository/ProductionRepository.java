@@ -43,6 +43,12 @@ public interface ProductionRepository extends JpaRepository<Production, Long> {
     @Query("SELECT COALESCE(SUM(p.producedQuantity), 0) FROM Production p WHERE LOWER(p.createdBy) = LOWER(:username)")
     Long getTotalProducedQuantityByUser(@Param("username") String username);
 
+    @Query("SELECT COALESCE(SUM(p.producedQuantity), 0) FROM Production p WHERE p.productionDate BETWEEN :startDate AND :endDate")
+    Long getTotalProducedQuantityByDate(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
     @Query("SELECT COALESCE(SUM(p.producedQuantity), 0) FROM Production p " +
             "WHERE p.productionDate BETWEEN :startDate AND :endDate AND LOWER(p.createdBy) = LOWER(:username)")
     Long getTotalProducedQuantityByDateAndUser(

@@ -63,11 +63,8 @@ public class DashboardService {
             totalNg += (Long) row[1];
         }
 
-        long totalProduction = 0;
-        List<com.gmp.defect_system.entity.Production> allProduction = productionRepository.findAll();
-        for (com.gmp.defect_system.entity.Production prod : allProduction) {
-            totalProduction += prod.getProducedQuantity();
-        }
+        Long prodSum = productionRepository.getTotalProducedQuantityByDate(start, end);
+        long totalProduction = (prodSum != null) ? prodSum : 0L;
 
         double defectRate = 0.0;
         if (totalProduction > 0) {
