@@ -3,6 +3,8 @@ package com.gmp.defect_system.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -11,10 +13,18 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "IniAdalahKunciRahasiaPabrikQCDefectMonitoringSystemYangSangatPanjangSekalidanQCnyagantengsekali12345";
-    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+    @Value("${jwt.secret:${JWT_SECRET:IniAdalahKunciRahasiaPabrikQCDefectMonitoringSystemYangSangatPanjangSekalidanQCnyagantengsekali12345}}")
+    private String jwtSecret;
 
-    private final long jwtExpirationMs = 86400000; // 1 Hari
+    @Value("${jwt.expiration-ms:${JWT_EXPIRATION_MS:86400000}}")
+    private long jwtExpirationMs;
+
+    private Key key;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
